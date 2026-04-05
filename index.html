@@ -370,8 +370,8 @@ padding:10px;
 <button data-tab="products" onclick="openTab('products', this)">Products</button>
 <button data-tab="ingredients" onclick="openTab('ingredients', this)">Ingredients</button>
 <button data-tab="pricing" onclick="openTab('pricing', this)">Pricing</button>
-<button data-tab="opex" onclick="openTab('opex', this)">OPEX</button>
 <button data-tab="reports" onclick="openTab('reports', this)">Product Reports</button>
+<button data-tab="opex" onclick="openTab('opex', this)">OPEX</button>
 <button data-tab="forecast" onclick="openTab('forecast', this)">PNL Forecast</button>
 <button data-tab="clear" onclick="openTab('clear', this)">System</button>
 </nav>
@@ -486,7 +486,6 @@ padding:10px;
 
 		<select id="opexCategory">
 			<option>Freight</option>
-			<option>Royalty</option>
 			<option>Promo</option>
 			<option>Rental %</option>
 			<option>Supplies</option>
@@ -502,8 +501,9 @@ padding:10px;
 			<option>Maintenance Fixed</option>
 			<option>Security</option>
 			<option>Taxes Fixed</option>
-			<option>Others</option>
-			<option>Admin</option>
+      <option>Others - Variable</option>
+      <option>Others - Fixed</option>
+      <option>Admin</option>
 		</select>
 		<input id="opexAccount" placeholder="Account Name">
 		<input id="opexDesc" placeholder="Description">
@@ -601,7 +601,7 @@ PNL Summary ▼
 
 <tr><td><b>Gross Sales</b></td><td id="pnl_gross"></td><td>100%</td></tr>
 
-<tr><td>Cos-F&P-Total</td><td id="pnl_cogs"></td><td id="pnl_cogs_pct"></td></tr>
+<tr><td>Food Cost and Paper Cost Total</td><td id="pnl_cogs"></td><td id="pnl_cogs_pct"></td></tr>
 <tr>
 <td>Discounts</td>
 <td id="pnl_discount"></td>
@@ -612,13 +612,13 @@ onblur="formatDiscountInput(this)"> %
 </td>
 </tr>
 <tr><td>Freight</td><td id="pnl_freight"></td><td id="pnl_freight_pct"></td></tr>
-<tr><td>Royalty and Ads</td><td id="pnl_royalty"></td><td id="pnl_royalty_pct"></td></tr>
-<tr><td>Promo-Local</td><td id="pnl_promo"></td><td id="pnl_promo_pct"></td></tr>
-<tr><td>S&B Dailies</td><td id="pnl_sb"></td><td id="pnl_sb_pct"></td></tr>
+<tr><td>Promotional</td><td id="pnl_promo"></td><td id="pnl_promo_pct"></td></tr>
+<tr><td>Salaries and Benefits for Dailies</td><td id="pnl_sb"></td><td id="pnl_sb_pct"></td></tr>
 <tr><td>Rental - Percentage</td><td id="pnl_rent_pct"></td><td id="pnl_rent_pct_pct"></td></tr>
-<tr><td>Opn Supplies</td><td id="pnl_supplies"></td><td id="pnl_supplies_pct"></td></tr>
+<tr><td>Operating Supplies</td><td id="pnl_supplies"></td><td id="pnl_supplies_pct"></td></tr>
 <tr><td>Repairs & Maintenance</td><td id="pnl_maint"></td><td id="pnl_maint_pct"></td></tr>
 <tr><td>Taxes and Licenses - Variable</td><td id="pnl_tax_var"></td><td id="pnl_tax_var_pct"></td></tr>
+<tr><td>Others - Variable</td><td id="pnl_others_var"></td><td id="pnl_others_var_pct"></td></tr>
 
 <tr><td><b>Total Variable Cost</b></td><td id="pnl_var_total"></td><td id="pnl_var_pct"></td></tr>
 
@@ -626,14 +626,14 @@ onblur="formatDiscountInput(this)"> %
 
 <tr><td colspan="3"><hr></td></tr>
 
-<tr><td>S&B Monthlies</td><td id="pnl_sb_monthly"></td><td id="pnl_sb_monthly_pct"></td></tr>
+<tr><td>Salaries and Benefits for Monthlies</td><td id="pnl_sb_monthly"></td><td id="pnl_sb_monthly_pct"></td></tr>
 <tr><td>Depreciation</td><td id="pnl_depreciation"></td><td id="pnl_depreciation_pct"></td></tr>
 <tr><td>Rental - Fixed</td><td id="pnl_rent_fixed"></td><td id="pnl_rent_fixed_pct"></td></tr>
 <tr><td>Electricity - Fixed</td><td id="pnl_elec"></td><td id="pnl_elec_pct"></td></tr>
 <tr><td>Preventive Maintenance</td><td id="pnl_maint_fixed"></td><td id="pnl_maint_fixed_pct"></td></tr>
 <tr><td>Security & Janitorial</td><td id="pnl_security"></td><td id="pnl_security_pct"></td></tr>
 <tr><td>Taxes and Licenses - Fixed</td><td id="pnl_tax_fixed"></td><td id="pnl_tax_fixed_pct"></td></tr>
-<tr><td>Opn Expenses-Others</td><td id="pnl_others"></td><td id="pnl_others_pct"></td></tr>
+<tr><td>Others - Fixed</td><td id="pnl_others_fixed"></td><td id="pnl_others_fixed_pct"></td></tr>
 
 <tr><td><b>Total Fixed Cost</b></td><td id="pnl_fixed"></td><td id="pnl_fixed_pct"></td></tr>
 
@@ -643,9 +643,8 @@ onblur="formatDiscountInput(this)"> %
 
 
 
-<tr><td>Less: Expenses</td><td></td><td></td></tr>
-<tr><td>     Pre-op Expenses</td><td></td><td></td></tr>
-<tr><td>     Administrative Cost</td><td id="pnl_admin"></td><td id="pnl_admin_pct"></td></tr>
+<tr><td>Less: Pre-op Expenses</td><td></td><td></td></tr>
+<tr><td>Less: Administrative Cost</td><td id="pnl_admin"></td><td id="pnl_admin_pct"></td></tr>
 
 <tr><td><b>Net Operating Income</b></td><td id="pnl_net"></td><td id="pnl_net_pct"></td></tr>
 
@@ -653,7 +652,7 @@ onblur="formatDiscountInput(this)"> %
 
 <tr><td><b>EBITDA</b></td><td id="pnl_ebitda"></td><td id="pnl_ebitda_pct"></td></tr>
 
-<tr><td><b>EBITDAR / Store Cash Flow</b></td><td id="pnl_store_cf"></td><td id="pnl_store_cf_pct"></td></tr>
+<tr><td><b>Store Cash Flow</b></td><td id="pnl_store_cf"></td><td id="pnl_store_cf_pct"></td></tr>
 
 </table>
 </div>
@@ -767,9 +766,13 @@ const defaultOpexTemplate = [
 
 {pnl:"Taxes Fixed", acc:"Permits & Licenses", desc:"Annual Permits", assign:"Gov", amount:0},
 
-{pnl:"Others", acc:"Insurance", desc:"Property Insurance", assign:"Amortization", amount:0},
-{pnl:"Others", acc:"Telephone", desc:"Internet/Phone", assign:"Billing", amount:0},
-{pnl:"Others", acc:"Professional Fees", desc:"Legal/Consulting", assign:"Admin", amount:0},
+// VARIABLE OTHERS
+{pnl:"Others - Variable", acc:"Misc Variable", desc:"Variable Misc Expense", assign:"Operations", amount:0},
+
+// FIXED OTHERS
+{pnl:"Others - Fixed", acc:"Insurance", desc:"Property Insurance", assign:"Amortization", amount:0},
+{pnl:"Others - Fixed", acc:"Telephone", desc:"Internet/Phone", assign:"Billing", amount:0},
+{pnl:"Others - Fixed", acc:"Professional Fees", desc:"Legal/Consulting", assign:"Admin", amount:0},
 
 
 /* ===== BELOW NOI ===== */
@@ -805,8 +808,30 @@ o.pnl === templateItem.pnl &&
 o.acc === templateItem.acc
 )
 
+// ✅ USE SAVED VALUE IF EXISTS
 return existing ? existing : templateItem
 
+})
+
+// ✅ ADD CUSTOM ROWS (NOT IN TEMPLATE)
+savedOpex.forEach(savedItem => {
+
+let exists = opexData.some(t =>
+t.pnl === savedItem.pnl &&
+t.acc === savedItem.acc
+)
+
+if(!exists){
+opexData.push(savedItem)
+}
+
+})
+
+// 🔥 DATA CLEANUP (FIX OLD "Others")
+opexData.forEach(o => {
+if(o.pnl === "Others"){
+o.pnl = "Others - Fixed"
+}
 })
 }
 
@@ -2007,6 +2032,13 @@ opexData.forEach((o, index)=>{
 
 let row = table.insertRow()
 
+// ✅ CLICK TO EDIT
+row.onclick = function(e){
+if(!e.target.closest("input") && !e.target.closest("button")){
+editOpex(index)
+}
+}
+
 row.insertCell(0).innerText = o.pnl
 row.insertCell(1).innerText = o.acc
 row.insertCell(2).innerText = o.desc
@@ -2227,10 +2259,10 @@ let discountRate = discountRateInput / 100
 let discountTotal = grossSales * discountRate
 
 // ===== OPEX BREAKDOWN =====
-let freight=0, royalty=0, promo=0, rent_pct=0, supplies=0, tax_var=0
+let freight=0, promo=0, rent_pct=0, supplies=0, tax_var=0
 let sb=0, sb_monthly=0, depreciation=0, rent_fixed=0
 let elec=0, maint=0, maint_fixed=0, security=0
-let tax_fixed=0, others=0, admin=0
+let tax_fixed=0, others_var=0, others_fixed=0, admin=0
 
 opexData.forEach(o=>{
 
@@ -2238,7 +2270,6 @@ switch(o.pnl){
 
 // ===== VARIABLE COST =====
 case "Freight": freight += o.amount; break
-case "Royalty": royalty += o.amount; break
 case "Promo": promo += o.amount; break
 case "Rental %": rent_pct += o.amount; break
 case "Supplies": supplies += o.amount; break
@@ -2254,7 +2285,14 @@ case "Electricity": elec += o.amount; break
 case "Maintenance Fixed": maint_fixed += o.amount; break
 case "Security": security += o.amount; break
 case "Taxes Fixed": tax_fixed += o.amount; break
-case "Others": others += o.amount; break
+// ===== VARIABLE COST =====
+case "Others - Variable": others_var += o.amount; break
+
+// ===== FIXED COST =====
+case "Others - Fixed":
+case "Others": // 🔥 catch old data
+others_fixed += o.amount
+break
 
 // ===== BELOW NOI =====
 case "Admin": admin += o.amount; break
@@ -2268,13 +2306,13 @@ let variableCost =
 cogs +
 discountTotal +
 freight +
-royalty +
 promo +
 sb +
 rent_pct +
 supplies +
 maint +
-tax_var
+tax_var +
+others_var
 
 // ===== CONTRIBUTION MARGIN =====
 let cm = grossSales - variableCost
@@ -2288,7 +2326,7 @@ elec +
 maint_fixed +
 security +
 tax_fixed +
-others
+others_fixed
 
 // ===== NOI =====
 let noi = cm - fixedCost
@@ -2315,9 +2353,6 @@ setVal("pnl_discount", discountTotal)
 setVal("pnl_freight", freight)
 setPct("pnl_freight_pct", freight, grossSales)
 
-setVal("pnl_royalty", royalty)
-setPct("pnl_royalty_pct", royalty, grossSales)
-
 setVal("pnl_promo", promo)
 setPct("pnl_promo_pct", promo, grossSales)
 
@@ -2335,6 +2370,11 @@ setPct("pnl_maint_pct", maint, grossSales)
 
 setVal("pnl_tax_var", tax_var)
 setPct("pnl_tax_var_pct", tax_var, grossSales)
+
+// VARIABLE OTHERS
+setVal("pnl_others_var", others_var)
+setPct("pnl_others_var_pct", others_var, grossSales)
+
 
 // ===== TOTAL VARIABLE =====
 setVal("pnl_var_total", variableCost)
@@ -2366,8 +2406,10 @@ setPct("pnl_security_pct", security, grossSales)
 setVal("pnl_tax_fixed", tax_fixed)
 setPct("pnl_tax_fixed_pct", tax_fixed, grossSales)
 
-setVal("pnl_others", others)
-setPct("pnl_others_pct", others, grossSales)
+
+// FIXED OTHERS
+setVal("pnl_others_fixed", others_fixed)
+setPct("pnl_others_fixed_pct", others_fixed, grossSales)
 
 // ===== TOTAL FIXED =====
 setVal("pnl_fixed", fixedCost)
