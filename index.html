@@ -358,6 +358,21 @@ padding:10px;
 
 }
 
+.spinner{
+  width:30px;
+  height:30px;
+  border:4px solid #ccc;
+  border-top:4px solid #1e3a8a;
+  border-radius:50%;
+  animation:spin 1s linear infinite;
+  margin:0 auto;
+}
+
+@keyframes spin{
+  0%{transform:rotate(0deg);}
+  100%{transform:rotate(360deg);}
+}
+
 </style>
 </head>
 
@@ -418,6 +433,15 @@ padding:10px;
 <button id="cancelEditBtn" class="btn btn-secondary" onclick="cancelEdit()" style="display:none;">Cancel</button>
 
 <p id="ingredientMessage" style="color:green;"></p>
+
+<button class="btn btn-secondary" onclick="toggleIngredientFilter()">Filter</button>
+
+<input 
+  id="ingredientFilterInput" 
+  placeholder="Filter by product..." 
+  style="display:none; margin-top:8px;"
+  oninput="filterIngredientsTable()"
+/>
 
 <div class="table-container">
 <table class="table" id="ingredientTable">
@@ -700,6 +724,38 @@ Choose File
 <button class="btn btn-primary full-btn" onclick="restoreData()">Restore Data</button>
 
 <p id="backupMessage" style="color:green;"></p>
+
+</div>
+
+</div>
+
+<br>
+
+<!-- 🔥 APP UPDATE CONTAINER -->
+<div class="card">
+
+<div class="card-header" onclick="toggleSection('updateBox')">
+App Update ▼
+</div>
+
+<div id="updateBox" class="card-body">
+
+<p>Check for latest version of the app.</p>
+
+<button class="btn btn-primary full-btn" onclick="checkForUpdate()">
+Check for Updates
+</button>
+
+<button class="btn btn-secondary full-btn" onclick="forceUpdateApp()">
+Force Update (Clear Cache)
+</button>
+
+<p id="updateMessage" style="color:green;"></p>
+
+<div id="updateLoader" style="display:none; text-align:center; margin-top:10px;">
+  <div class="spinner"></div>
+  <p>Checking for updates...</p>
+</div>
 
 </div>
 
@@ -2516,6 +2572,122 @@ localStorage.setItem("pnl_discount_rate", val)
 
 // recompute
 renderForecast()
+}
+
+function toggleIngredientFilter(){
+  let input = document.getElementById("ingredientFilterInput")
+
+  if(input.style.display === "none"){
+    input.style.display = "block"
+    input.focus()
+  }else{
+    input.style.display = "none"
+    input.value = ""
+    renderIngredients() // reset table
+  }
+}
+
+function filterIngredientsTable(){
+  let value = document.getElementById("ingredientFilterInput").value.toLowerCase()
+
+  let table = document.getElementById("ingredientTable")
+
+  table.innerHTML = `
+  <tr>
+  <th>Product</th><th>Ingredient</th><th>Type</th>
+  <th>Total Cost</th><th>Yield</th><th>UOM</th><th>Unit Cost</th><th>Action</th>
+  </tr>
+  `
+
+  ingredients
+    .filter(i => i.product.toLowerCase().includes(value))
+    .forEach((i, index)=>{
+      let row = table.insertRow()
+
+      row.insertCell(0).innerText = i.product
+      row.insertCell(1).innerText = i.name
+      row.insertCell(2).innerText = i.type
+      row.insertCell(3).innerText = i.totalCost.toFixed(2)
+      row.insertCell(4).innerText = i.yield
+      row.insertCell(5).innerText = i.uom
+      row.insertCell(6).innerText = i.unitCost.toFixed(4)
+
+      let actionCell = row.insertCell(7)
+      actionCell.innerHTML = `
+      <div class="action-buttons">
+        <button class="btn btn-edit" onclick="editIngredient(${index})">Edit</button>
+        <button class="btn btn-delete" onclick="deleteIngredient(${index})">Delete</button>
+      </div>
+      `
+    })
+}
+
+
+// 🔥 CHECK FOR UPDATE (SERVICE WORKER)
+function checkForUpdate(){
+
+if(!('serviceWorker' in navigator)){
+return alert("Service Worker not supported")
+}
+
+let loader = document.getElementById("updateLoader")
+let msg = document.getElementById("updateMessage")
+
+// 🔥 SHOW LOADER
+loader.style.display = "block"
+msg.innerText = ""
+
+navigator.serviceWorker.getRegistration().then(reg => {
+
+if(!reg){
+loader.style.display = "none"
+msg.innerText = "No service worker found."
+return
+}
+
+// 🔥 FORCE UPDATE CHECK
+reg.update().then(()=>{
+
+// give time to detect update
+setTimeout(()=>{
+
+loader.style.display = "none"
+msg.innerText = "App is up to date."
+
+}, 1500)
+
+})
+
+})
+
+// 🔥 IF NEW VERSION ACTIVATED
+navigator.serviceWorker.addEventListener('controllerchange', () => {
+msg.innerText = "New version applied. Reloading..."
+location.reload()
+})
+}
+
+function forceUpdateApp(){
+
+if(!confirm("This will clear app cache and reload latest version. Continue?")) return
+
+// 🔥 CLEAR CACHE STORAGE
+caches.keys().then(names => {
+names.forEach(name => caches.delete(name))
+})
+
+// 🔥 FORCE SERVICE WORKER UPDATE
+if(navigator.serviceWorker){
+navigator.serviceWorker.getRegistrations().then(regs=>{
+regs.forEach(reg => reg.unregister())
+})
+}
+
+// 🔥 RELOAD
+setTimeout(()=>{
+location.reload(true)
+}, 500)
+
 }
 
 </script>
