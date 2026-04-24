@@ -21,8 +21,15 @@ flex:1;padding:12px;border:none;background:#333;color:#fff;cursor:pointer;
 }
 nav button.active{background:#1e3a8a}
 
-section{display:none;padding:15px}
-section.active{display:block}
+section{
+  display:none;
+  padding:20px;
+}
+
+section.active{
+  display:block;
+  margin-top:20px;   /* clean spacing */
+}
 
 input, select{
 padding:8px;margin:5px 0;width:100%;box-sizing:border-box;
@@ -373,23 +380,233 @@ padding:10px;
   100%{transform:rotate(360deg);}
 }
 
+/* ===== LAYOUT ===== */
+.app{
+  display:flex;
+  min-height:100vh;
+}
+.sidebar{
+  min-height:100vh; /* 🔥 fill full page */
+}
+
+/* SIDEBAR */
+.sidebar{
+  position:fixed;
+  top:0;
+  right:-240px;   /* 🔥 hidden */
+  width:220px;
+  height:100%;
+  background:#1e3a8a;
+  color:#fff;
+  display:flex;
+  flex-direction:column;
+  padding:15px 10px;
+  transition:0.3s;
+  z-index:2000;
+}
+
+.overlay{
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  background:rgba(0,0,0,0.3);
+  display:none;
+  z-index:1500;
+}
+
+.overlay.show{
+  display:block;
+}
+
+/* 🔥 SHOW SIDEBAR */
+.sidebar.open{
+  right:0;
+}
+.sidebar .logo{
+  font-size:18px;
+  font-weight:bold;
+  margin-bottom:20px;
+}
+
+.sidebar button{
+  background:none;
+  border:none;
+  color:#fff;
+  padding:14px 12px;
+  text-align:left;
+  cursor:pointer;
+  border-radius:6px;
+  font-size:16px;     /* 🔥 increase */
+  font-weight:500;    /* optional - cleaner */
+}
+
+.sidebar button:hover{
+  background:#2563eb;
+}
+
+.sidebar button.active{
+  background:#2563eb;
+}
+
+/* MAIN */
+.main-content{
+  margin-left:0;   /* 🔥 REMOVE */
+  padding:25px;
+  padding-top:70px; /* space for header */
+}
+
+/* MOBILE */
+@media(max-width:768px){
+  .sidebar{
+    width:70px;
+  }
+
+  .sidebar .logo{
+    display:none;
+  }
+
+  .sidebar button{
+    font-size:12px;
+    text-align:center;
+  }
+}
+
+/* ===== BACKUP HERO ===== */
+.backup-hero{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:#e5e7eb;
+  padding:25px;
+  border-radius:12px;
+}
+
+.backup-text h1{
+  margin:10px 0;
+}
+
+.badge{
+  background:#dbeafe;
+  padding:5px 10px;
+  border-radius:20px;
+  font-size:12px;
+}
+
+.backup-actions{
+  margin-top:15px;
+}
+
+.backup-icon{
+  font-size:80px;
+}
+
+/* FEATURES */
+.backup-features{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:15px;
+  margin-top:20px;
+}
+
+.feature-card{
+  background:#fff;
+  padding:15px;
+  border-radius:10px;
+  box-shadow:0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* NOTE */
+.backup-note{
+  margin-top:15px;
+  background:#e0e7ff;
+  padding:10px;
+  border-radius:8px;
+  font-size:13px;
+}
+
+.top-header{
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  height:60px;
+  background:#1e3a8a;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 15px;
+  z-index:1100;
+}
+
+.app-name{
+  font-size:18px;
+  font-weight:bold;
+}
+
+.menu-btn{
+  font-size:22px;
+  background:none;
+  border:none;
+  color:#fff;
+  cursor:pointer;
+}
+
+.main-content{
+  flex:1;          /* 🔥 VERY IMPORTANT */
+  width:100%;      /* 🔥 FORCE FULL WIDTH */
+  position:relative;
+  z-index:1;
+}
+
+
+.backup-actions{
+  display:flex;
+  flex-direction:column;
+  align-items:center;   /* 🔥 CENTER BUTTONS */
+  width:100%;
+}
+
+.backup-actions .btn{
+  max-width:400px;      /* 🔥 CONTROL WIDTH */
+  width:100%;
+}
+
+.backup-text{
+  max-width:500px;
+}
+
 </style>
 </head>
 
 <body>
 
-<header>Product Costing System</header>
+<div class="app">
 
-<nav>
-<button data-tab="home" onclick="openTab('home', this)">Home</button>
-<button data-tab="products" onclick="openTab('products', this)">Products</button>
-<button data-tab="ingredients" onclick="openTab('ingredients', this)">Ingredients</button>
-<button data-tab="pricing" onclick="openTab('pricing', this)">Pricing</button>
-<button data-tab="reports" onclick="openTab('reports', this)">Product Reports</button>
-<button data-tab="opex" onclick="openTab('opex', this)">OPEX</button>
-<button data-tab="forecast" onclick="openTab('forecast', this)">PNL Forecast</button>
-<button data-tab="clear" onclick="openTab('clear', this)">System</button>
-</nav>
+<div class="top-header">
+  <div class="app-name">Forecasting System</div>
+  <button class="menu-btn" onclick="toggleMenu()">☰</button>
+</div>
+
+<div class="overlay" onclick="toggleMenu()"></div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo">Menu</div>
+    <button onclick="openTab('home', this)">🏠 Home</button>
+    <button onclick="openTab('products', this)">📦 Products</button>
+    <button onclick="openTab('ingredients', this)">🥩 Ingredients</button>
+    <button onclick="openTab('pricing', this)">💰 Pricing</button>
+    <button onclick="openTab('reports', this)">📊 Reports</button>
+    <button onclick="openTab('opex', this)">📉 OPEX</button>
+    <button onclick="openTab('forecast', this)">📈 Forecast</button>
+    <button onclick="openTab('clear', this)">⚙️ System</button>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
 
 <section id="home">
 <h3>Welcome</h3>
@@ -685,85 +902,79 @@ onblur="formatDiscountInput(this)"> %
 </section>
 
 <section id="clear">
-<h3>System Maintenance</h3>
 
-<!-- 🔥 CLEAR DATA CONTAINER -->
-<div class="card">
+<div class="backup-hero">
 
-<div class="card-header" onclick="toggleSection('clearBox')">
-Clear All Data ▼
-</div>
+  <div class="backup-text">
+    <span class="badge">✔ Data Protection</span>
 
-<div id="clearBox" class="card-body">
-<button class="btn btn-delete full-btn" onclick="resetAll()">Clear All Data</button>
-</div>
+    <h1>Data Recovery<br>Backup</h1>
 
-</div>
+    <p>
+      Securely backup and restore all patient records.<br>
+      Your data is encrypted and protected.
+    </p>
 
-<br>
+    <div class="backup-actions">
 
-<!-- 🔥 BACKUP CONTAINER -->
-<div class="card">
+	  <button class="btn btn-primary full-btn" onclick="backupData()">
+		⬆ Backup Data
+	  </button>
 
-<div class="card-header" onclick="toggleSection('backupBox')">
-Backup & Restore ▼
-</div>
+	  <button class="btn btn-secondary full-btn" onclick="triggerRestore()">
+		⬇ Restore Backup
+	  </button>
 
-<div id="backupBox" class="card-body">
+	  <button class="btn btn-delete full-btn" onclick="clearAllData()">
+		⚠ Clear All Data
+	  </button>
 
-<button class="btn btn-primary full-btn" onclick="backupData()">Backup Data</button>
+	</div>
 
-<input type="file" id="restoreFile" accept=".costing" style="display:none;" onchange="handleFileSelect()">
+	<input type="file" id="restoreFile" accept=".costing" style="display:none;">
 
-<button class="btn btn-secondary full-btn" onclick="document.getElementById('restoreFile').click()">
-Choose File
-</button>
+	<p id="systemMessage" style="margin-top:10px; font-weight:bold;"></p>
 
-<div id="selectedFileName" class="file-name"></div>
+  </div>
 
-<button class="btn btn-primary full-btn" onclick="restoreData()">Restore Data</button>
-
-<p id="backupMessage" style="color:green;"></p>
-
-</div>
+  <div class="backup-icon">
+    💾
+  </div>
 
 </div>
 
-<br>
 
-<!-- 🔥 APP UPDATE CONTAINER -->
-<div class="card">
+<!-- FEATURES -->
+<div class="backup-features">
 
-<div class="card-header" onclick="toggleSection('updateBox')">
-App Update ▼
-</div>
+  <div class="feature-card">
+    🔒 <b>Secure Encryption</b>
+    <p>All backups are encrypted using AES security.</p>
+  </div>
 
-<div id="updateBox" class="card-body">
+  <div class="feature-card">
+    ✅ <b>Safe & Reliable</b>
+    <p>Your data can be restored anytime.</p>
+  </div>
 
-<p>Check for latest version of the app.</p>
-
-<button class="btn btn-primary full-btn" onclick="checkForUpdate()">
-Check for Updates
-</button>
-
-<button class="btn btn-secondary full-btn" onclick="forceUpdateApp()">
-Force Update (Clear Cache)
-</button>
-
-<p id="updateMessage" style="color:green;"></p>
-
-<div id="updateLoader" style="display:none; text-align:center; margin-top:10px;">
-  <div class="spinner"></div>
-  <p>Checking for updates...</p>
-</div>
+  <div class="feature-card">
+    📁 <b>File Format</b>
+    <p>Backup uses secured format.</p>
+  </div>
 
 </div>
 
+<div class="backup-note">
+  ℹ Keep your backup file safe. It can only be restored using this system.
 </div>
 
 </section>
 
-<div class="footer">Developed by KN. All rights reserved.</div>
+</main>
+
+</div>
+
+<div class="footer">Developed by Khennete A.</div>
 
 <script>
 let products = []
@@ -917,22 +1128,22 @@ localStorage.setItem("opexData", JSON.stringify(opexData))
 localStorage.setItem("forecastData", JSON.stringify(forecastData))
 }
 
+
 function openTab(id, btn){
 
-	document.querySelectorAll("section").forEach(s=>s.classList.remove("active"))
-	document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"))
+  document.querySelectorAll("section").forEach(s=>s.classList.remove("active"))
+  document.querySelectorAll(".sidebar button").forEach(b=>b.classList.remove("active"))
 
-	document.getElementById(id).classList.add("active")
+  document.getElementById(id).classList.add("active")
 
-	if(btn){
-	btn.classList.add("active")
-	}else{
-	// 🔥 find button using data-tab
-	let found = document.querySelector(`nav button[data-tab="${id}"]`)
-	if(found) found.classList.add("active")
-	}
+  if(btn){
+    btn.classList.add("active")
+  }
 
-	localStorage.setItem("activeTab", id)
+  // 🔥 CLOSE MENU AFTER CLICK
+  document.querySelector(".sidebar").classList.remove("open")
+
+  localStorage.setItem("activeTab", id)
 }
 
 function addPricing(){
@@ -2019,14 +2230,28 @@ document.getElementById("selectedFileName").innerText = ""
 
 function toggleSection(id){
 
-["clearBox","backupBox"].forEach(box=>{
-if(box !== id){
-document.getElementById(box).style.display = "none"
-}
+// ✅ include ALL collapsible sections here
+let allSections = [
+  "clearBox",
+  "backupBox",
+  "forecastSalesBox",
+  "forecastPNLBox"
+]
+
+// close others
+allSections.forEach(box=>{
+  if(box !== id){
+    let el = document.getElementById(box)
+    if(el) el.style.display = "none"
+  }
 })
 
+// toggle selected
 let el = document.getElementById(id)
-el.style.display = (el.style.display === "block") ? "none" : "block"
+
+if(el){
+  el.style.display = (el.style.display === "block") ? "none" : "block"
+}
 }
 
 function addOpex(){
@@ -2689,6 +2914,111 @@ location.reload(true)
 }, 500)
 
 }
+
+function toggleMenu(){
+  document.querySelector(".sidebar").classList.toggle("open")
+  document.querySelector(".overlay").classList.toggle("show")
+}
+
+
+function triggerRestore(){
+
+let fileInput = document.getElementById("restoreFile")
+
+fileInput.onchange = function(){
+
+  if(!fileInput.files.length) return
+
+  if(!confirm("Restore backup will OVERWRITE current data.\n\nContinue?")){
+    fileInput.value = ""
+    return
+  }
+
+  let password = prompt("Enter backup password:")
+  if(!password) return
+
+  let reader = new FileReader()
+
+  reader.onload = function(e){
+
+    try{
+
+      let bytes = CryptoJS.AES.decrypt(e.target.result, password)
+      let decrypted = bytes.toString(CryptoJS.enc.Utf8)
+
+      if(!decrypted){
+        showSystemMessage("❌ Wrong password or corrupted file", "red")
+        return
+      }
+
+      let data = JSON.parse(decrypted)
+
+      if(!data.products || !data.ingredients || !data.pricingData || !data.opexData){
+        showSystemMessage("❌ Invalid backup file", "red")
+        return
+      }
+
+      products = data.products
+      ingredients = data.ingredients
+      pricingData = data.pricingData
+      opexData = data.opexData
+
+      saveData()
+      renderProducts()
+      renderIngredients()
+      renderPricing()
+      renderOpex()
+
+      showSystemMessage("✅ Data restored successfully", "green")
+
+    }catch(err){
+      showSystemMessage("❌ Restore failed", "red")
+    }
+
+  }
+
+  reader.readAsText(fileInput.files[0])
+}
+
+fileInput.click()
+}
+
+function clearAllData(){
+
+if(!confirm("⚠ WARNING:\nThis will DELETE ALL DATA.\n\nContinue?")){
+  return
+}
+
+let input = prompt("Type DELETE to confirm:")
+
+if(input !== "DELETE"){
+  showSystemMessage("Cancelled. Data is safe.", "orange")
+  return
+}
+
+// CLEAR STORAGE
+localStorage.clear()
+
+products = []
+ingredients = []
+pricingData = []
+opexData = JSON.parse(JSON.stringify(defaultOpexTemplate))
+
+saveData()
+renderProducts()
+renderIngredients()
+renderPricing()
+renderOpex()
+
+showSystemMessage("✅ All data cleared successfully", "green")
+}
+
+function showSystemMessage(msg, color){
+let el = document.getElementById("systemMessage")
+el.innerText = msg
+el.style.color = color
+}
+
 
 </script>
 
