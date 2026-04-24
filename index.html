@@ -587,7 +587,7 @@ padding:10px;
 
 <div class="top-header">
   <div class="app-name">Forecasting System</div>
-  <button class="menu-btn" onclick="toggleMenu()">☰</button>
+  <button class="menu-btn" onclick="toggleMenu(event)">☰</button>
 </div>
 
 <div class="overlay" onclick="toggleMenu()"></div>
@@ -2915,11 +2915,17 @@ location.reload(true)
 
 }
 
-function toggleMenu(){
+function toggleMenu(e){
+
+  if(e) e.stopPropagation();  // 🔥 PREVENT BODY CLICK
+
   document.querySelector(".sidebar").classList.toggle("open")
   document.querySelector(".overlay").classList.toggle("show")
 }
 
+document.querySelector(".sidebar").addEventListener("click", function(e){
+  e.stopPropagation();   // 🔥 clicks inside sidebar won't affect anything
+})
 
 function triggerRestore(){
 
