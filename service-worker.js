@@ -1,4 +1,4 @@
-const CACHE_NAME = "costingv4";
+const CACHE_NAME = "costingv6";
 
 const FILES_TO_CACHE = [
   "./",
