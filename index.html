@@ -590,10 +590,10 @@ padding:10px;
   <button class="menu-btn" onclick="toggleMenu(event)">☰</button>
 </div>
 
-<div class="overlay" onclick="toggleMenu()"></div>
+<div class="overlay" onclick="closeMenu()"></div>
 
   <!-- SIDEBAR -->
-  <aside class="sidebar">
+  <aside class="sidebar" onclick="event.stopPropagation()">
     <div class="logo">Menu</div>
     <button onclick="openTab('home', this)">🏠 Home</button>
     <button onclick="openTab('products', this)">📦 Products</button>
@@ -1140,8 +1140,8 @@ function openTab(id, btn){
     btn.classList.add("active")
   }
 
-  // 🔥 CLOSE MENU AFTER CLICK
-  document.querySelector(".sidebar").classList.remove("open")
+  // CLOSE MENU CLEANLY
+	closeMenu();
 
   localStorage.setItem("activeTab", id)
 }
@@ -3025,7 +3025,27 @@ el.innerText = msg
 el.style.color = color
 }
 
+function toggleMenu(e){
+  if(e) e.stopPropagation();
 
+  const sidebar = document.querySelector(".sidebar");
+  const overlay = document.querySelector(".overlay");
+
+  sidebar.classList.toggle("open");
+  overlay.classList.toggle("show");
+}
+
+function closeMenu(){
+  document.querySelector(".sidebar").classList.remove("open");
+  document.querySelector(".overlay").classList.remove("show");
+}
+
+
+	document.querySelector(".main-content").addEventListener("click", function(){
+  closeMenu();
+});
+
+	
 </script>
 
 </body>
